@@ -4,4 +4,4 @@ import csv
 def get_data():
     with open('rwusagereport.csv', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
-        return reader[1:]
+        return list(reader)[1:]
