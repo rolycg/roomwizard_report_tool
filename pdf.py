@@ -18,14 +18,20 @@ def generate_row(row):
 
 
 def generate_resume_row(data):
+    res_list = []
     res = ''
     for x in data.keys():
         for y in data[x].keys():
-            res += "<tr>"
-            res += '<td>' + str(x) + '</td>'
-            res += '<td>' + str(data[x][y]) + '</td>'
-            res += '<td>' + str(y) + '</td>'
-            res += "</tr>"
+            res_list.append((str(x), get_hours(data[x][y]), str(y)))
+
+    res_list.sort(key=lambda x: (-x[1][0], -x[1][1]))
+
+    for x in res_list:
+        res += "<tr>"
+        res += '<td>' + str(x[0]) + '</td>'
+        res += '<td>' + str(convert_hours_to_str(x[1])) + '</td>'
+        res += '<td>' + str(x[2]) + '</td>'
+        res += "</tr>"
     return res
 
 
@@ -37,9 +43,21 @@ def generate_header(fields):
     return res
 
 
-def get_hours(start, end):
-    elapsed = end - start
-    return elapsed.seconds // 3600
+def get_seconds(elapsed):
+    res = (elapsed.seconds//60) % 60
+    return str(res) if res else '00'
+
+
+def convert_hours(elapsed):
+    return '0'+ str(elapsed) if len(str(elapsed)) == 1 else str(elapsed)
+
+
+def get_hours(elapsed):
+    return elapsed.seconds // 3600, elapsed
+
+
+def convert_hours_to_str(elapsed):
+    return '%s:%s hr' % (convert_hours(elapsed[0]), get_seconds(elapsed[1]))
 
 
 def convert_resume_data(rooms):
@@ -49,11 +67,11 @@ def convert_resume_data(rooms):
         if office_hour:
             hour = office_hour.get(room.office)
             if hour:
-                office_hour[room.office] += get_hours(room.start_date, room.end_date)
+                office_hour[room.office] += room.end_date - room.start_date
             else:
-                office_hour[room.office] = get_hours(room.start_date, room.end_date)
+                office_hour[room.office] = room.end_date - room.start_date
         else:
-            data[room.host] = {room.office: get_hours(room.start_date, room.end_date)}
+            data[room.host] = {room.office: room.end_date - room.start_date}
     return data
 
 
