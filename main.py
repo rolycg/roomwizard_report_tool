@@ -4,12 +4,12 @@ from room import Room
 from pdf import convertHtmlToPdf, outputFilename
 from difflib import SequenceMatcher
 from email_util import send_email_with_attachment
-import os
-
-
+import os, time
+from threading import Timer
 
 names = []
 times = {}
+timeout = 10.0  # Sixty seconds
 
 
 def similar(text, other_text):
@@ -38,7 +38,9 @@ def convert_date(line, index):
     return datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
 
 
-if __name__ == '__main__':
+def _main():
+    global names
+    global times
     data = get_data()
     info = {}
     names = []
@@ -50,3 +52,12 @@ if __name__ == '__main__':
     convertHtmlToPdf(info, start_date='01/01/2017', end_date='11/15/2017', letter="Room A")
     send_email_with_attachment(outputFilename)
     os.remove(outputFilename)
+
+
+def job_function():
+    Timer(60, job_function).start()
+    print("Running job_funtion")
+
+
+if __name__ == '__main__':
+    job_function()
