@@ -1,0 +1,22 @@
+url = /admin/test/GetRoomUsage.action
+
+Cokkies_KEY = 'JSESSIONID'
+Cookies = {
+'http://10.10.7.50': 'd8njr06y33uc17thmiuizz6rb'
+'http://10.10.7.51': '7zu982q1ohzspqmf60gzbvx6'
+}
+
+
+date in
+startDay
+startMonth
+startYear
+
+date out
+endDay
+endMonth
+endYear
+
+roomUsage: usedates
+detailed: detailed
+format: CSV 
