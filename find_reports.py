@@ -1,5 +1,7 @@
 import requests
 import datetime
+import StringIO
+import zipfile
 
 IPS = ('http://10.10.7.50', 'http://10.10.7.51')
 URL = '/admin/test/GetRoomUsage.action'
@@ -55,8 +57,11 @@ def get_reports(date_in, date_out):
     for address in IPS:
         r = requests.post(address + URL, data=payload, headers=HEADERS[address])
         print(r.content)
-        # with open(FILE_NAME + address, 'a+w') as f:
-        #     f.write(r.content)
+        #print(r.code)
+        print(r.headers)
+        with open(FILE_NAME + address[-2:] + '.zip' , 'w+') as f:
+             z = zipfile.ZipFile(StringIO.StringIO(r.content))
+             z.extractall()
 
 
 get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
