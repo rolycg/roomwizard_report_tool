@@ -42,7 +42,6 @@ def send_email_with_attachment(pdf):
     smtp.sendmail(username, to_address, msg.as_string())
     smtp.quit()
 
-
 # def send_mail():
 #     server = smtplib.SMTP_SSL('smtp.gmail.com:465')
 #     server.login(username, password)
