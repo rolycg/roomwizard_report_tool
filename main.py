@@ -75,6 +75,7 @@ def _main(date_in, date_out):
                          letter=get_room(_file))
         send_email_with_attachment(outputFilename)
         os.remove(outputFilename)
+        os.remove(_file)
 
 
 def job_function():

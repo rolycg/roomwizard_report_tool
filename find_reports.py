@@ -65,6 +65,10 @@ def get_reports(date_in, date_out):
         z = zipfile.ZipFile(StringIO.StringIO(r.content))
         z.extractall()
         os.rename(FILE_NAME, 'report_' + address[-2:] + '.csv')
+        try:
+            os.remove(FILE_NAME)
+        except:
+            pass
 
 
 # get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
