@@ -2,6 +2,7 @@ import requests
 import datetime
 import StringIO
 import zipfile
+import os
 
 IPS = ('http://10.10.7.50', 'http://10.10.7.51')
 URL = '/admin/test/GetRoomUsage.action'
@@ -10,7 +11,9 @@ COOKIES = {
     'http://10.10.7.51': '7zu982q1ohzspqmf60gzbvx6'
 }
 
-FILE_NAME = 'report_'
+
+
+FILE_NAME = 'rwusagereport.csv'
 
 HEADERS = {
     'http://10.10.7.51': {
@@ -56,12 +59,11 @@ def get_reports(date_in, date_out):
     }
     for address in IPS:
         r = requests.post(address + URL, data=payload, headers=HEADERS[address])
-        print(r.content)
-        #print(r.code)
-        print(r.headers)
-        with open(FILE_NAME + address[-2:] + '.zip' , 'w+') as f:
-             z = zipfile.ZipFile(StringIO.StringIO(r.content))
-             z.extractall()
+
+        # with open(FILE_NAME + address[-2:] + '.zip', 'w+') as f:
+        z = zipfile.ZipFile(StringIO.StringIO(r.content))
+        z.extractall()
+        os.rename(FILE_NAME, 'report_' + address[-2:] + '.csv')
 
 
 get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
