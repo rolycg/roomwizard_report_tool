@@ -5,7 +5,7 @@ beginHtml = "<html> <style> @page {size: letter portrait;@frame content_frame {l
             ".header-resume { align:left; width:40%;}" \
             "</style><body>"
 endHtml = "</body></html>"
-outputFilename = "test.pdf"
+outputFilename = " usage.pdf"
 
 
 def generate_row(row):
@@ -152,7 +152,7 @@ def convertHtmlToPdf(room, start_date, end_date, letter):
     ]
 
     source_html = ''.join(html_parts)
-    result_file = open(outputFilename, "w+b")
+    result_file = open(letter + outputFilename, "w+b")
 
     pisaStatus = pisa.CreatePDF(
         source_html,  # the HTML to convert

@@ -73,7 +73,7 @@ def _main(date_in, date_out):
             count += 1
         convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
                          letter=get_room(_file))
-        send_email_with_attachment(outputFilename)
+        send_email_with_attachment(outputFilename, get_room(_file))
         os.remove(outputFilename)
         os.remove(_file)
 
