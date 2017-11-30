@@ -57,6 +57,7 @@ def get_reports(date_in, date_out):
         'detailed': 'detailed',
         'format': 'CSV'
     }
+
     for address in IPS:
         r = requests.post(address + URL, data=payload, headers=HEADERS[address])
 
@@ -66,4 +67,4 @@ def get_reports(date_in, date_out):
         os.rename(FILE_NAME, 'report_' + address[-2:] + '.csv')
 
 
-get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
+# get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())

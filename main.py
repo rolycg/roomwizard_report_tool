@@ -1,15 +1,21 @@
 from parseCSV import get_data
 from datetime import datetime
-from room import Room
+from room import Room, RoomOffice
 from pdf import convertHtmlToPdf, outputFilename
 from difflib import SequenceMatcher
 from email_util import send_email_with_attachment
-import os, time
+from find_reports import get_reports
+import os
 from threading import Timer
 
 names = []
 times = {}
 timeout = 10.0  # Sixty seconds
+
+ROOMS = {
+    '50': 'Room A',
+    '51': 'Room B'
+}
 
 
 def similar(text, other_text):
@@ -38,25 +44,44 @@ def convert_date(line, index):
     return datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
 
 
-def _main():
+def get_room(filename):
+    if '50' in filename:
+        return RoomOffice.get_name_room(RoomOffice._50)
+    elif '51' in filename:
+        return RoomOffice.get_name_room(RoomOffice._51)
+
+
+def get_american_date(date):
+    return date.strftime('%m/%d/%Y')
+
+
+def _main(date_in, date_out):
     global names
     global times
-    data = get_data()
-    info = {}
-    names = []
-    times = {}
-    count = 0
-    for line in data:
-        info[count] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13), fix_str(line[17]))
-        count += 1
-    convertHtmlToPdf(info, start_date='01/01/2017', end_date='11/15/2017', letter="Room A")
-    send_email_with_attachment(outputFilename)
-    os.remove(outputFilename)
+    get_reports(date_in, date_out)
+    files = os.listdir('.')
+    files = filter(lambda x: '.csv' in x, files)
+    for _file in files:
+        data = get_data(_file)
+        info = {}
+        names = []
+        times = {}
+        count = 0
+        for line in data:
+            info[count] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13),
+                               fix_str(line[17]))
+            count += 1
+        convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
+                         letter=get_room(_file))
+        send_email_with_attachment(outputFilename)
+        os.remove(outputFilename)
 
 
 def job_function():
-    Timer(60, job_function).start()
-    print("Running job_funtion")
+    print("Running report function")
+    today = datetime.today()
+    _main(datetime(today.year, today.month - 1, today.day), today)
+    Timer(60 * 60, job_function).start()
 
 
 if __name__ == '__main__':

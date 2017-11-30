@@ -9,7 +9,7 @@ import os
 SERVER = 'smtp.gmail.com'
 username = 'towpebsmtp2@gmail.com'
 password = 'Gerr@rd4'
-to_address = ['rolycg89@gmail.com', 'alex@kdtechnology.net']
+to_address = ['rolycg89@gmail.com', ]
 subject = 'Report about Room Usage'
 PORT = 465
 
@@ -21,7 +21,7 @@ Subject: %s
 
 %s
 """ % (username, ", ".join(to_address), subject, body)
-
+#'alex@kdtechnology.net'
 
 def send_email_with_attachment(pdf):
     msg = MIMEMultipart()

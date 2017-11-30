@@ -125,7 +125,8 @@ def convertHtmlToPdf(room, start_date, end_date, letter):
     for row in room.keys():
         rows += generate_row(room[row])
 
-    main_header = '<div align="center"><h1> Resume Room Usage</h1> <h3>%s - %s</h3></div>' % (start_date, end_date)
+    main_header = '<div align="center"><h1> Resume ' + letter + ' Usage</h1> <h3>%s - %s</h3></div>' % (
+        start_date, end_date)
 
     header = generate_header(('OFFICE', 'START DATE', 'END DATE', 'HOST'))
     table = '<div align="center" class="left" > <h2 align="center">General</h2><table>' + header + rows + '</table></div>'
