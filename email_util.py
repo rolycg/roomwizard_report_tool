@@ -28,7 +28,7 @@ def send_email_with_attachment(pdf, room):
     msg['From'] = username
     msg['To'] = COMMASPACE.join(to_address)
     msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = subject + room + 'usage'
+    msg['Subject'] = subject + room + ' usage'
 
     msg.attach(MIMEText(message))
 

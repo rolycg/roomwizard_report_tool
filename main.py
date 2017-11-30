@@ -67,14 +67,16 @@ def _main(date_in, date_out):
         names = []
         times = {}
         count = 0
+        _room = get_room(_file)
         for line in data:
             info[count] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13),
                                fix_str(line[17]))
             count += 1
         convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
-                         letter=get_room(_file))
-        send_email_with_attachment(outputFilename, get_room(_file))
-        os.remove(outputFilename)
+                         letter=_room)
+        pdf = _room + outputFilename
+        send_email_with_attachment(pdf, _room)
+        os.remove(pdf)
         os.remove(_file)
 
 
@@ -82,7 +84,7 @@ def job_function():
     print("Running report function")
     today = datetime.today()
     _main(datetime(today.year, today.month - 1, today.day), today)
-    Timer(60 * 60, job_function).start()
+    Timer(60 * 60 * 24, job_function).start()
 
 
 if __name__ == '__main__':
