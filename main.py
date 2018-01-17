@@ -85,8 +85,12 @@ def _main(date_in, date_out):
 def job_function():
     print("Running report function")
     today = datetime.today()
-    month = today.month - 1 if today.month - 1 else 12
-    _main(datetime(today.year, month, today.day), today)
+    month = today.month - 1
+    year = today.year
+    if today.month == 1:
+        month = 12
+        year -= 1
+    _main(datetime(year, month, today.day), today)
     Timer(60 * 60 * 24, job_function).start()
 
 
