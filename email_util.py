@@ -21,7 +21,9 @@ Subject: %s
 
 %s
 """ % (username, ", ".join(to_address), subject, body)
-#'alex@kdtechnology.net'
+
+
+# 'alex@kdtechnology.net'
 
 def send_email_with_attachment(pdf, room):
     msg = MIMEMultipart()

@@ -61,29 +61,32 @@ def _main(date_in, date_out):
     get_reports(date_in, date_out)
     files = os.listdir('.')
     files = filter(lambda x: '.csv' in x, files)
+    info = {}
     for _file in files:
         data = get_data(_file)
-        info = {}
+
         names = []
         times = {}
         count = 0
         _room = get_room(_file)
         for line in data:
             info[count] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13),
-                               fix_str(line[17]))
+                               fix_str(line[17]), room=_room)
             count += 1
-        convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
-                         letter=_room)
-        pdf = _room + outputFilename
-        send_email_with_attachment(pdf, _room)
-        os.remove(pdf)
-        os.remove(_file)
+            os.remove(_file)
+    convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
+                     letter='')
+
+    pdf = outputFilename
+    # send_email_with_attachment(pdf, '')
+    os.remove(pdf)
 
 
 def job_function():
     print("Running report function")
     today = datetime.today()
-    _main(datetime(today.year, today.month - 1, today.day), today)
+    month = today.month - 1 if today.month - 1 else 12
+    _main(datetime(today.year, month, today.day), today)
     Timer(60 * 60 * 24, job_function).start()
 
 
