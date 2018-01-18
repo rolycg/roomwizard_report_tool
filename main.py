@@ -1,5 +1,6 @@
 from parseCSV import get_data
 from datetime import datetime
+import calendar
 from room import Room, RoomOffice
 from pdf import convertHtmlToPdf, outputFilename
 from difflib import SequenceMatcher
@@ -76,9 +77,7 @@ def _main(date_in, date_out):
                                         fix_str(line[17]), booking_id=booking_id, room=_room)
             elif operation == 'U':
                 try:
-                    info[booking_id].update_dates(convert_date(line,9), convert_date(line,13))
-
-
+                    info[booking_id].update_dates(convert_date(line, 9), convert_date(line, 13))
                 except:
                     pass
             elif operation == 'D':
@@ -93,21 +92,18 @@ def _main(date_in, date_out):
     for _file in files:
         os.remove(_file)
     pdf = outputFilename
-    print('Finish')
-    send_email_with_attachment(pdf, 'Summary from %s - %s' % (date_in, date_out))
+    send_email_with_attachment(pdf, 'Rooms summary from %s, %s' % (date_in.month, date_in.year))
     os.remove(pdf)
 
 
 def job_function():
-    print("Running report function")
+
     today = datetime.today()
-    month = today.month - 1
-    year = today.year
-    if today.month == 1:
-        month = 12
-        year -= 1
-    _main(datetime(year, month, today.day), today)
-    Timer(60 * 60 * 24, job_function).start()
+    print("Running report function %s" % str(today))
+    last_day = calendar.monthrange(today.year, today.month)
+    if today.day == last_day and today.hour == 23:
+        _main(today, today)
+    Timer(60 * 60, job_function).start()
 
 
 if __name__ == '__main__':

@@ -30,6 +30,7 @@ def generate_data(rooms):
     month = {}
     for key in rooms.keys():
         room = rooms[key]
+        # datetime.datetime.today().month
         if datetime.datetime.today().month == room.start_date.month:
             try:
                 details[room.host].append(generate_row(room))
@@ -159,7 +160,8 @@ def convertHtmlToPdf(room, start_date, end_date, letter):
 
     header = generate_header(('OFFICE', 'START DATE', 'END DATE', 'SESSION', 'HOST'))
     m = datetime.datetime.today()
-    div = '<div align="center" class="left" > <h2 align="center">' + '<h3>' + ' Month: ' + m.strftime('%B') + ', ' + str(m.year) + '</h3>' + '</h2>'
+    div = '<div align="center" class="left" > <h2 align="center">' + '<h3>' + ' Month: ' + m.strftime(
+        '%B') + ', ' + str(m.year) + '</h3>' + '</h2>'
 
     table = ''
     for keys in general.iterkeys():

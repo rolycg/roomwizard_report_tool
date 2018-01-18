@@ -10,10 +10,10 @@ SERVER = 'smtp.gmail.com'
 username = 'towpebsmtp2@gmail.com'
 password = 'Gerr@rd4'
 to_address = ['rolycg89@gmail.com', 'alex@kdtechnology.net']
-subject = 'Report about '
+subject = 'Report about Rooms usage'
 PORT = 465
 
-body = "This is a example of email and attachment. If you have something like a template for KD Tech like footers, header or logo we can use it for the email and the pdf."
+body = "Please find attached a summary for rooms usage in this month."
 message = """\
 From: %s
 To: %s
@@ -30,7 +30,7 @@ def send_email_with_attachment(pdf, room):
     msg['From'] = username
     msg['To'] = COMMASPACE.join(to_address)
     msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = subject + room + ' usage'
+    msg['Subject'] = room
 
     msg.attach(MIMEText(message))
 
