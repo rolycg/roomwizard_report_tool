@@ -9,7 +9,7 @@ import os
 SERVER = 'smtp.gmail.com'
 username = 'towpebsmtp2@gmail.com'
 password = 'Gerr@rd4'
-to_address = ['rolycg89@gmail.com', 'alex@kdtechnology.net']
+to_address = ['rolycg89@gmail.com']
 subject = 'Report about Rooms usage'
 PORT = 465
 
@@ -21,6 +21,8 @@ Subject: %s
 
 %s
 """ % (username, ", ".join(to_address), subject, body)
+
+to_address_tmp = ['34E51Operations@sedescoinc.com']
 
 
 # 'alex@kdtechnology.net'
@@ -41,6 +43,7 @@ def send_email_with_attachment(pdf, room):
     msg.attach(part)
     smtp = smtplib.SMTP_SSL(SERVER, PORT)
     smtp.login(username, password)
+    smtp.sendmail(username, to_address_tmp, msg.as_string())
     smtp.sendmail(username, to_address, msg.as_string())
     smtp.quit()
 
