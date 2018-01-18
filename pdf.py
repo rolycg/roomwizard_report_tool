@@ -33,9 +33,9 @@ def generate_data(rooms):
         # datetime.datetime.today().month
         if datetime.datetime.today().month == room.start_date.month:
             try:
-                details[room.host].append(generate_row(room))
+                details[room.host].append(room)
             except:
-                details[room.host] = [generate_row(room)]
+                details[room.host] = [room]
             try:
                 month[room.host] += room.seconds
             except:
@@ -156,6 +156,9 @@ def convertHtmlToPdf(room, start_date, end_date, letter):
 
     details, general, month = generate_data(room)
 
+    for key in details.iterkeys():
+        details[key].sort(key=lambda y: y.start_date)
+
     main_header = '<div align="center"><h1> 34 / EAST / 51 / STREET </h1> <h3>7th Floor Conference Room Usage</h3> </div>'
 
     header = generate_header(('OFFICE', 'START DATE', 'END DATE', 'SESSION', 'HOST'))
@@ -166,7 +169,7 @@ def convertHtmlToPdf(room, start_date, end_date, letter):
     table = ''
     for keys in general.iterkeys():
         try:
-            rows = ''.join(details[keys])
+            rows = ''.join([generate_row(x) for x in details[keys]])
         except:
             rows = ''
         table += '<div align="center" class="left"> <h2 align="center">' + '<h2>' + str(

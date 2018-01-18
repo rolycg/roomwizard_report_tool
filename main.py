@@ -87,8 +87,7 @@ def _main(date_in, date_out):
                     pass
             count += 1
 
-    convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
-                     letter='')
+    convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out), letter='')
     for _file in files:
         os.remove(_file)
     pdf = outputFilename
@@ -97,7 +96,6 @@ def _main(date_in, date_out):
 
 
 def job_function():
-
     today = datetime.today()
     print("Running report function %s" % str(today))
     last_day = calendar.monthrange(today.year, today.month)
