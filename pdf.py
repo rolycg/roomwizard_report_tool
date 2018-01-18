@@ -1,6 +1,7 @@
 from xhtml2pdf import pisa
+import datetime
 
-beginHtml = "<html> <style> @page {size: letter portrait;@frame content_frame {left: 50pt;top: 50pt;right: 50pt; }}" \
+beginHtml = "<html> <style> @page {size: letter portrait;@frame content_frame {left: 50pt;top: 50pt;right: 50pt;bottom:50pt }}" \
             ".left{margin-left: 0cm;margin-right: 0cm;} " \
             ".header-resume { align:left; width:40%;}" \
             "</style><body>"
@@ -22,20 +23,27 @@ def generate_row(row):
 def convert_standard_hour(seconds):
     return convert_hours_to_str_2((int(seconds) // 3600, (int(seconds) // 60) % 60))
 
+
 def generate_data(rooms):
     general = {}
     details = {}
+    month = {}
     for key in rooms.keys():
         room = rooms[key]
-        try:
-            details[room.host].append(generate_row(room))
-        except:
-            details[room.host] = [generate_row(room)]
+        if datetime.datetime.today().month == room.start_date.month:
+            try:
+                details[room.host].append(generate_row(room))
+            except:
+                details[room.host] = [generate_row(room)]
+            try:
+                month[room.host] += room.seconds
+            except:
+                month[room.host] = room.seconds
         try:
             general[room.host] += room.seconds
         except:
             general[room.host] = room.seconds
-    return details, general
+    return details, general, month
 
 
 def generate_row_session(data):
@@ -145,26 +153,37 @@ def convertHtmlToPdf(room, start_date, end_date, letter):
     # for row in room.keys():
     #     rows += generate_row(room[row])
 
-    details, general = generate_data(room)
+    details, general, month = generate_data(room)
 
     main_header = '<div align="center"><h1> 34 / EAST / 51 / STREET </h1> <h3>7th Floor Conference Room Usage</h3> </div>'
 
     header = generate_header(('OFFICE', 'START DATE', 'END DATE', 'SESSION', 'HOST'))
-    div = '<div align="center" class="left" > <h2 align="center">' + '<h3>' + start_date + ' - ' + end_date + '</h3>' + '</h2>'
+    m = datetime.datetime.today()
+    div = '<div align="center" class="left" > <h2 align="center">' + '<h3>' + ' Month: ' + m.strftime('%B') + ', ' + str(m.year) + '</h3>' + '</h2>'
 
     table = ''
-    for keys in details.iterkeys():
-        rows = ''.join(details[keys])
-        table += '<div align="center" class="left"> <h2 align="center">' + '<h3>' + str(keys) + ': ' + convert_standard_hour(
-            general[keys]) + ' total usage </h3>' + '</h2>'
-        table += '<table>' + header + rows + '</table></div>'
+    for keys in general.iterkeys():
+        try:
+            rows = ''.join(details[keys])
+        except:
+            rows = ''
+        table += '<div align="center" class="left"> <h2 align="center">' + '<h2>' + str(
+            keys) + ': ' + convert_standard_hour(
+            general[keys]) + ' ytd usage </h2>' + '</h2>'
+        try:
+            table += '<div align="center" class="left"> <h2 align="center">' + '<h3>' + str(
+                keys) + ': ' + convert_standard_hour(
+                month[keys]) + ' mtd usage </h3>' + '</h2>'
+            table += '<table>' + header + rows + '</table></div>'
+        except:
+            pass
         table += '<br/>'
 
     # header_resume = header_resume_host(('HOST', 'HOURS', 'OFFICE'))
     # rows_resume = generate_resume_row(convert_resume_data(room))
     # resume = '<div align="center" class="left" > <h2 align="center">By Host</h2><table>' + header_resume + rows_resume + '</table></div>'
     # jump = '<p style="page-break-after: always;">&nbsp;</p>'
-    # _break = '<br/>'
+    _break = '<br/>'
     #
     # header_session = header_resume_host(('HOST', 'SESSION', 'TIMES'))
     # rows_session = generate_row_session(room)

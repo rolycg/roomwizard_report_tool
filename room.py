@@ -1,5 +1,5 @@
 class Room:
-    def __init__(self, _id, office, start_date, end_date, host, room='Room A'):
+    def __init__(self, _id, office, start_date, end_date, host, booking_id, room='Room A'):
         self.id = _id
         self.office = office
         self.start_date = start_date
@@ -9,6 +9,14 @@ class Room:
         self.hours = self.seconds // 3600
         self.delta = self.end_date - self.start_date
         self.room = room
+        self.booking_id = booking_id
+
+    def update_dates(self, start_date, end_date):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.seconds = (self.end_date - self.start_date).seconds
+        self.hours = self.seconds // 3600
+        self.delta = self.end_date - self.start_date
 
     def convert_hours_to_str(self):
         return '%s:%s hr' % (self.convert_hours(self.delta[0]), self.get_seconds(self.delta[1]))

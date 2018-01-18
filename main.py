@@ -58,7 +58,7 @@ def get_american_date(date):
 def _main(date_in, date_out):
     global names
     global times
-    # get_reports(date_in, date_out)
+    get_reports('', '')
     files = os.listdir('.')
     files = filter(lambda x: '.csv' in x, files)
     info = {}
@@ -69,8 +69,23 @@ def _main(date_in, date_out):
         times = {}
         _room = get_room(_file)
         for line in data:
-            info[count] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13),
-                               fix_str(line[17]), room=_room)
+            operation = line[30].strip().upper()
+            booking_id = line[8].strip()
+            if operation == 'I':
+                info[booking_id] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13),
+                                        fix_str(line[17]), booking_id=booking_id, room=_room)
+            elif operation == 'U':
+                try:
+                    info[booking_id].update_dates(convert_date(line,9), convert_date(line,13))
+
+
+                except:
+                    pass
+            elif operation == 'D':
+                try:
+                    del info[booking_id]
+                except:
+                    pass
             count += 1
 
     convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out),
@@ -78,8 +93,8 @@ def _main(date_in, date_out):
     for _file in files:
         os.remove(_file)
     pdf = outputFilename
-
-    send_email_with_attachment(pdf, '')
+    print('Finish')
+    send_email_with_attachment(pdf, 'Summary from %s - %s' % (date_in, date_out))
     os.remove(pdf)
 
 

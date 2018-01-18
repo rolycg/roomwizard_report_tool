@@ -11,8 +11,6 @@ COOKIES = {
     'http://10.10.7.51': '7zu982q1ohzspqmf60gzbvx6'
 }
 
-
-
 FILE_NAME = 'rwusagereport.csv'
 
 HEADERS = {
@@ -47,13 +45,10 @@ HEADERS = {
 
 def get_reports(date_in, date_out):
     payload = {
-        'startDay': str(date_in.day),
-        'startMonth': str(date_in.month),
-        'startYear': str(date_in.year),
-        'endDay': str(date_out.day),
-        'endMonth': str(date_out.month),
-        'endYear': str(date_out.year),
-        'roomUsage': 'usedates',
+        'when': '0',
+        'unitAmount': '1',
+        'unit': '4',
+        'roomUsage': 'useduration',
         'detailed': 'detailed',
         'format': 'CSV'
     }
@@ -69,6 +64,5 @@ def get_reports(date_in, date_out):
             os.remove(FILE_NAME)
         except:
             pass
-
 
 # get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
