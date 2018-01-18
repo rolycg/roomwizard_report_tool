@@ -45,7 +45,7 @@ HEADERS = {
 
 def get_reports(date_in, date_out):
     payload = {
-        'when': '-1',
+        'when': '0',
         'unitAmount': '1',
         'unit': '4',
         'roomUsage': 'useduration',
