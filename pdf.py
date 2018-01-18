@@ -10,12 +10,32 @@ outputFilename = " usage.pdf"
 
 def generate_row(row):
     res = "<tr>"
-    res += '<td align="left">' + row.office + '</td>'
+    res += '<td align="left">' + row.room + '</td>'
     res += '<td align="left">' + str(row.start_date.strftime("%m/%d/%y %H:%M:%S")) + '</td>'
     res += '<td align="left">' + str(row.end_date.strftime("%m/%d/%y %H:%M:%S")) + '</td>'
+    res += '<td align="left">' + convert_standard_hour(row.seconds) + '</td>'
     res += '<td align="left">' + row.host + '</td>'
     res += "</tr>"
     return res
+
+
+def convert_standard_hour(seconds):
+    return convert_hours_to_str_2((int(seconds) // 3600, (int(seconds) // 60) % 60))
+
+def generate_data(rooms):
+    general = {}
+    details = {}
+    for key in rooms.keys():
+        room = rooms[key]
+        try:
+            details[room.host].append(generate_row(room))
+        except:
+            details[room.host] = [generate_row(room)]
+        try:
+            general[room.host] += room.seconds
+        except:
+            general[room.host] = room.seconds
+    return details, general
 
 
 def generate_row_session(data):
@@ -121,32 +141,43 @@ def convert_resume_data(rooms):
 
 
 def convertHtmlToPdf(room, start_date, end_date, letter):
-    rows = ""
-    for row in room.keys():
-        rows += generate_row(room[row])
+    # rows = ""
+    # for row in room.keys():
+    #     rows += generate_row(room[row])
 
-    main_header = '<div align="center"><h1> Summary ' + letter + ' Usage</h1> <h3>%s - %s</h3></div>' % (
-        start_date, end_date)
+    details, general = generate_data(room)
 
-    header = generate_header(('OFFICE', 'START DATE', 'END DATE', 'HOST'))
-    table = '<div align="center" class="left" > <h2 align="center">General</h2><table>' + header + rows + '</table></div>'
-    header_resume = header_resume_host(('HOST', 'HOURS', 'OFFICE'))
-    rows_resume = generate_resume_row(convert_resume_data(room))
-    resume = '<div align="center" class="left" > <h2 align="center">By Host</h2><table>' + header_resume + rows_resume + '</table></div>'
-    jump = '<p style="page-break-after: always;">&nbsp;</p>'
-    _break = '<br/>'
+    main_header = '<div align="center"><h1> 34 / EAST / 51 / STREET </h1> <h3>7th Floor Conference Room Usage</h3> </div>'
 
-    header_session = header_resume_host(('HOST', 'SESSION', 'TIMES'))
-    rows_session = generate_row_session(room)
-    session = '<div align="center" class="left" > <h2 align="center">By Session</h2><table>' + header_session + rows_session + '</table></div>'
+    header = generate_header(('OFFICE', 'START DATE', 'END DATE', 'SESSION', 'HOST'))
+    div = '<div align="center" class="left" > <h2 align="center">' + '<h3>' + start_date + ' - ' + end_date + '</h3>' + '</h2>'
+
+    table = ''
+    for keys in details.iterkeys():
+        rows = ''.join(details[keys])
+        table += '<div align="center" class="left"> <h2 align="center">' + '<h3>' + str(keys) + ': ' + convert_standard_hour(
+            general[keys]) + ' total usage </h3>' + '</h2>'
+        table += '<table>' + header + rows + '</table></div>'
+        table += '<br/>'
+
+    # header_resume = header_resume_host(('HOST', 'HOURS', 'OFFICE'))
+    # rows_resume = generate_resume_row(convert_resume_data(room))
+    # resume = '<div align="center" class="left" > <h2 align="center">By Host</h2><table>' + header_resume + rows_resume + '</table></div>'
+    # jump = '<p style="page-break-after: always;">&nbsp;</p>'
+    # _break = '<br/>'
+    #
+    # header_session = header_resume_host(('HOST', 'SESSION', 'TIMES'))
+    # rows_session = generate_row_session(room)
+    # session = '<div align="center" class="left" > <h2 align="center">By Session</h2><table>' + header_session + rows_session + '</table></div>'
 
     html_parts = [
         beginHtml,
         main_header,
-        resume,
-        _break,
-        session,
-        jump,
+        # resume,
+        # _break,
+        # session,
+        # jump,
+        div,
         table,
         endHtml
     ]
