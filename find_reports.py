@@ -45,7 +45,7 @@ HEADERS = {
 
 def get_reports(date_in, date_out):
     payload = {
-        'when': '0',
+        'when': '-1',
         'unitAmount': '1',
         'unit': '4',
         'roomUsage': 'useduration',
@@ -65,4 +65,4 @@ def get_reports(date_in, date_out):
         except:
             pass
 
-# get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
+get_reports(date_in=datetime.datetime(2017, 1, 1), date_out=datetime.datetime.now())
