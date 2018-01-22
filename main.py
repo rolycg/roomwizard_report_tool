@@ -72,19 +72,22 @@ def _main(date_in, date_out):
         for line in data:
             operation = line[30].strip().upper()
             booking_id = line[8].strip()
-            if operation == 'I':
-                info[booking_id] = Room(count, fix_str(line[1]), convert_date(line, 9), convert_date(line, 13),
-                                        fix_str(line[17]), booking_id=booking_id, room=_room)
-            elif operation == 'U':
-                try:
-                    info[booking_id].update_dates(convert_date(line, 9), convert_date(line, 13))
-                except:
-                    pass
-            elif operation == 'D':
-                try:
-                    del info[booking_id]
-                except:
-                    pass
+            start_date = convert_date(line, 9)
+            today = datetime.today()
+            if start_date <= today:
+                if operation == 'I':
+                    info[booking_id] = Room(count, fix_str(line[1]), start_date, convert_date(line, 13),
+                                            fix_str(line[17]), booking_id=booking_id, room=_room)
+                elif operation == 'U':
+                    try:
+                        info[booking_id].update_dates(convert_date(line, 9), convert_date(line, 13))
+                    except:
+                        pass
+                elif operation == 'D':
+                    try:
+                        del info[booking_id]
+                    except:
+                        pass
             count += 1
 
     convertHtmlToPdf(info, start_date=get_american_date(date_in), end_date=get_american_date(date_out), letter='')

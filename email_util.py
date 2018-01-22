@@ -22,8 +22,7 @@ Subject: %s
 %s
 """ % (username, ", ".join(to_address), subject, body)
 
-to_address_tmp = ['34E51Operations@sedescoinc.com']
-
+to_address_tmp = ['34E51Operations@sedescoinc.com', 'alex@kdtechnology.net']
 
 # 'alex@kdtechnology.net'
 
@@ -31,6 +30,7 @@ def send_email_with_attachment(pdf, room):
     msg = MIMEMultipart()
     msg['From'] = username
     msg['To'] = COMMASPACE.join(to_address)
+
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = room
 
