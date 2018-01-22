@@ -102,7 +102,7 @@ def job_function():
     today = datetime.today()
     print("Running report function %s" % str(today))
     last_day = calendar.monthrange(today.year, today.month)
-    if today.day == last_day and today.hour == 23:
+    if today.weekday() == 4 and today.hour == 23:
         _main(today, today)
     Timer(60 * 60, job_function).start()
 
