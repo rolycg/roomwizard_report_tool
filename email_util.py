@@ -13,6 +13,8 @@ to_address = ['rolycg89@gmail.com']
 subject = 'Report about Rooms usage'
 PORT = 465
 
+to_address_tmp = ['34E51Operations@sedescoinc.com', 'alex@kdtechnology.net']
+
 body = "Please find attached a summary for rooms usage in this month."
 message = """\
 From: %s
@@ -20,16 +22,14 @@ To: %s
 Subject: %s
 
 %s
-""" % (username, ", ".join(to_address), subject, body)
-
-to_address_tmp = ['34E51Operations@sedescoinc.com', 'alex@kdtechnology.net']
+""" % (username, ", ".join(to_address_tmp), subject, body)
 
 # 'alex@kdtechnology.net'
 
 def send_email_with_attachment(pdf, room):
     msg = MIMEMultipart()
     msg['From'] = username
-    msg['To'] = COMMASPACE.join(to_address)
+    msg['To'] = COMMASPACE.join(to_address_tmp)
 
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = room
@@ -44,7 +44,7 @@ def send_email_with_attachment(pdf, room):
     smtp = smtplib.SMTP_SSL(SERVER, PORT)
     smtp.login(username, password)
     smtp.sendmail(username, to_address_tmp, msg.as_string())
-    smtp.sendmail(username, to_address, msg.as_string())
+    # smtp.sendmail(username, to_address, msg.as_string())
     smtp.quit()
 
 # def send_mail():
