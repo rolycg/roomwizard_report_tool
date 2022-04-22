@@ -11,7 +11,7 @@ idna==2.6
 kombu==4.1.0
 olefile==0.44
 Pillow==4.3.0
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 pytz==2017.2
 reportlab==3.4.0
 requests==2.18.4
