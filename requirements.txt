@@ -13,7 +13,7 @@ olefile==0.44
 Pillow==4.3.0
 PyPDF2==1.26.0
 pytz==2017.2
-reportlab==3.4.0
+reportlab==3.5.55
 requests==2.18.4
 selenium==3.6.0
 six==1.11.0
